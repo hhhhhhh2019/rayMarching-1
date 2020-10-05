@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://shader.shader" type="Shader" id=1]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/cam = Vector3( 0, 0, -10 )
+shader_param/light_pos = Vector3( 40, 20, -30 )
+shader_param/time = 0.0
+shader_param/vis_range = 200.0
+shader_param/angleY = 0.0
+shader_param/angleX = 0.0
