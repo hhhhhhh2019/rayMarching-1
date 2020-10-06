@@ -27,6 +27,15 @@ float smin(float a, float b, float k) {
 }
 
 
+mat4 move(vec3 dir) {
+	return mat4(
+		vec4(1, 0, 0, dir.x),
+		vec4(0, 1, 0, dir.y),
+		vec4(0, 0, 1, dir.z),
+		vec4(0, 0, 0, 1)
+	);
+}
+
 mat3 rotateX(float theta) {
     float c = cos(theta);
     float s = sin(theta);
@@ -65,9 +74,9 @@ float sphere(vec3 p, vec4 s) {
 	return distance(p.xyz, s.xyz) - s.w;
 }
 
-float box(vec3 p, vec3 pb, vec3 b) {
-	vec3 q = abs(p + pb) - b;
-	return length(max(q, 0.0) + min(max(q.x, max(q.y,q.z)), 0.0));
+float box(vec3 p, vec3 b) {
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 
 float torus(vec3 p, vec3 tp, vec2 t) {
@@ -91,10 +100,15 @@ float planeZ(vec3 p, float h) {
 float getDist(vec3 p) {
 	float obj1 = planeY(p, -0.8);
 	
-	vec3 obj2_point = rotateY(time) * p;
-	float obj2 = sphere(obj2_point, vec4(0, 0, 5, 2));
+	vec3 obj2_point = p;
+	vec3 obj2_center = vec3(0, 0, -10);
+	obj2_point = rotateY(time) * obj2_point;
+	obj2_point = (move(-obj2_center) * vec4(obj2_point, 1)).xyz;
+	float obj2 = box(obj2_point, vec3(1));
 	
-	return smin(obj1, obj2, 2);
+	float obj3 = sphere(p, vec4(0, 0, 10, 1));
+	
+	return smin(obj1, smin(obj2, obj3, 3), 0.3);
 }
 
 vec3 getNorm(vec3 p) {
